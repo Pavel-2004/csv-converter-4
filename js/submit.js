@@ -195,7 +195,7 @@ function questTradeFilter(data){
         }
     }
 
-    //addOptionsToFinalFormat(final)
+    //addOptionsToFinalFormat(final, 4, 16, 4, 18, "questrade")
     //converts all of the important columns into proper format
     return mapToProperFormat(final,{13:0, 0:1, 1:2, 4:3, 5:4, 16:5, 3:6, 2:7, 7:8, 8:9, 11:10})
 }
@@ -276,7 +276,7 @@ function tdFilter(data){
         }
 
     }
-    //return addOptionsToFinalFormat(final)
+    //return addOptionsToFinalFormat(final, false,2, 11,14, "TD")
     return mapToProperFormat(final, {9:0, 0:1, 1:2, 11:3, 10:4, 12:5, 4:6, 3:7, 5:8, 6:9, 8:10})
 
 }
@@ -388,7 +388,7 @@ function rbcFilter(data){
 
     }
 
-    //return addOptionsToFinalFormat(final)
+    //return addOptionsToFinalFormat(final, 3,4, 11, 15, "RBC")
     return mapToProperFormat(final, {8:0, 0:1, 7:2, 3:3, 12:4, 13:5, 1:6, 2:7, 5:8, 6:9, 9:10})
 }
 
@@ -439,7 +439,7 @@ function scotiaFilter(data){
 
 
     mapToProperFormat(finalData, {11:0, 2:1, 3:2, 1:3, 12:4, 0:5, 5:6, 6:7, 7:8, 9:9, 10:10})
-    //return addOptionsToFinalFormat(finalData)
+    //return addOptionsToFinalFormat(finalData, 1, 0, 12, 14, "SCOTIA BANK")
 }
 
 
@@ -494,7 +494,7 @@ function cibcFilter(data){
         }
     }
 
-    //return addOptionsToFinalFormat(finalData)
+    //return addOptionsToFinalFormat(finalData, 5, 7, 5, 21, "CIBC")
     mapToProperFormat(finalData, {18:0, 0:1, 1:2, 5:3, 19:4, 7:5, 3:6, 4:7, 8:8, 10:9, 14:10})
 }
 
@@ -510,13 +510,14 @@ function nationalBankFilter(data){
                 } else if (j == 11){
                     tempRow.push(Math.abs(parseFloat(data[i][j])))
                 } else if (j == 12){
-                    qty = Math.abs(parseFloat(data[i][9]))
-                    amount = Math.abs(parseFloat(data[i][12]))
+                    qty = Math.abs(parseFloat(data[i][12]))
+                    amount = Math.abs(parseFloat(data[i][9]))
                     if(qty == 0 || amount == 0){
                         tempRow.push(0)
                     } else {
-                        tempRow.push((amount / qty).toFixed(15))
+                        tempRow.push(parseFloat((amount / qty).toFixed(15)))
                     }
+
                 } else if(j == 8){
                     if(data[i][j] == "Sell") {
                         tempRow.push("SELL")
@@ -538,7 +539,7 @@ function nationalBankFilter(data){
         }
     }
     mapToProperFormat(finalData, {0:0, 2:1, 3:2, 6:3, 15:4, 7:5, 8:6, 9:7, 10:8, 13:9, 12:10})
-    //addOptionsToFinalFormat(finalData)
+    //addOptionsToFinalFormat(finalData, 6, 7, 6, 17, "NATIONAL BANK")
 
 }
 
@@ -547,7 +548,7 @@ function virtualBankFilter(data){
     finalData = []
     for (let i = 1; i < data.length; i++) {
         tempRow = []
-        console.log(data[i])
+
         if(data[i].length > 1){
             for (let j = 0; j < data[i].length; j++) {
                 if (j == 0){
@@ -574,6 +575,7 @@ function virtualBankFilter(data){
                     } else {
                         tempRow.push((amount / qty).toFixed(15))
                     }
+
                 } else {
                     tempRow.push(data[i][j])
                 }
@@ -585,82 +587,27 @@ function virtualBankFilter(data){
 
 
     mapToProperFormat(finalData, {0:0, 1:1, 2:2, 6:3, 15:4, 3:5, 4:6, 5:7, 11:8, 13:9, 14:10})
-    //addOptionsToFinalFormat(finalData)
+    //addOptionsToFinalFormat(finalData, 6, 3, 6, 17, "VIRTUAL BROKERS")
 }
 
 //case that options need to be added such as exchange and it can not just be converted straight into csv
-function addOptionsToFinalFormat(info){
-    //similar to checking for errors there is an if statement for every type of broker (If required)
-    if(selected == 'TD'){
-        infoFinal = []
-        for (let i = 0; i < info.length; i++) {
-            infoFinal.push(info[i])
-            tempExchangeToTicker = {}
-            if(info[i][2]){
-                results = getTickerFromDescription(info[i][2])
-                infoFinal[i].push(results[0][2])
-                for (let j = 0; j < results.length; j++) {
-                    for (let k = 0; k < results[j][1].length; k++) {
-                        tempExchangeToTicker[results[j][1][k]] =  results[j][0]
-                    }
-                }
-                infoFinal[i].push(tempExchangeToTicker)
-            }
+function addOptionsToFinalFormat(info, symbolIndex, originalName, originalSymbol, newInfo, typeBroker) {
 
-        }
-        return optionVisualizer(infoFinal)
-    } else if(selected == "RBC"){
-        infoFinal = []
-        for (let i = 0; i < info.length; i++) {
-            infoFinal.push(info[i])
-            tempExchangeToTicker = {}
-            if(info[i][3]){
-                results = getTickerFromTicker(info[i][3])
-                infoFinal[i].push(results[0][2])
-                for (let j = 0; j < results.length; j++) {
-                    for (let k = 0; k < results[j][1].length; k++) {
-                        tempExchangeToTicker[results[j][1][k]] = results[j][0]
-                    }
-                }
-            }
-            infoFinal[i].push(tempExchangeToTicker)
-        }
-        return optionVisualizer(infoFinal)
+    infoFinal = []
 
+    x = info.length
 
-    } else if(selected == "questrade"){
-        infoFinal = []
-        for (let i = 0; i < info.length; i++) {
-            infoFinal.push(info[i])
-            tempExchangeToTicker = {}
-            if(info[i][4]){
-                results = getTickerFromTicker(info[i][4])
-                infoFinal[i].push(results[0][2])
-                for (let j = 0; j < results.length; j++) {
-                    for (let k = 0; k < results[j][1].length; k++) {
-                       tempExchangeToTicker[results[j][1][k]] = results[j][0]
-                    }
-                }
-            }
-            infoFinal[i].push(tempExchangeToTicker)
-        }
+    for (let i = 0; i < x; i++) {
 
-        return optionVisualizer(infoFinal)
-    } else if(selected == "SCOTIA BANK"){
-        infoFinal = []
-        for (let i = 0; i < info.length; i++) {
-            infoFinal.push(info[i])
-            tempExchangeToTicker = {}
-            if(info[i][1] != ""){
-                newResults = getTickerFromDescription(info[i][0])
-                if(newResults.length > 0){
-                    infoFinal[i].push(newResults[0][2])
-                    for (let j = 0; j < newResults.length; j++) {
-                        for (let k = 0; k < newResults[j][1].length; k++) {
-                            tempExchangeToTicker[newResults[j][1][k]] = newResults[j][0]
-                        }
-                    }
-                    infoFinal[i].push(tempExchangeToTicker)
+        infoFinal.push(JSON.parse(JSON.stringify(info[i])))
+
+        //case that there is a symbol
+        if(symbolIndex){
+            result = filterForTickerAdvanced(info[i][symbolIndex], info[i][originalName])
+            if(info[i][symbolIndex]) {
+                if(result.length > 0) {
+                    infoFinal[i].push(result[0][0])
+                    infoFinal[i].push(result)
                 } else {
                     infoFinal[i].push("")
                     infoFinal[i].push(false)
@@ -670,92 +617,29 @@ function addOptionsToFinalFormat(info){
                 infoFinal[i].push(false)
             }
 
-        }
 
-        return optionVisualizer(infoFinal)
-    } else if (selected == "CIBC") {
-        infoFinal = []
-        for (let i = 0; i < info.length; i++) {
-            infoFinal.push(info[i])
-            tempExchangeToTicker = {}
-            if(info[i][5] != ""){
-                newResults = getTickerFromTicker(info[i][5])
-                if(newResults.length > 0) {
-                    infoFinal[i].push(newResults[0][2])
-                    for (let j = 0; j < newResults.length; j++) {
-                        for (let k = 0; k < newResults[j][1].length; k++) {
-                            tempExchangeToTicker[newResults[j][1][k]] = newResults[j][0]
-                        }
-                    }
-                    infoFinal[i].push(tempExchangeToTicker)
+        }  else {
+
+            result = filterForTickerAdvanced("NONE-NONE", info[i][originalName])
+            if(info[i][originalName]) {
+                if(result.length > 0) {
+                    infoFinal[i].push(result[0][0])
+                    infoFinal[i].push(result)
                 } else {
                     infoFinal[i].push("")
                     infoFinal[i].push(false)
                 }
-            } else {
+
+            }
+            else {
                 infoFinal[i].push("")
                 infoFinal[i].push(false)
             }
-        }
 
-        return optionVisualizer(infoFinal)
-    } else if (selected == "NATIONAL BANK"){
-        infoFinal = []
-        for (let i = 0; i < info.length; i++) {
-            infoFinal.push(info[i])
-            tempExchangeToTicker = {}
-            if(info[i][6] != ""){
-                newResults = getTickerFromTicker(info[i][6].split(".")[0])
-                if(newResults.length > 0){
-                    infoFinal[i].push(newResults[0][2])
-                    for (let j = 0; j < newResults.length; j++) {
-                        for (let k = 0; k < newResults[j][1].length; k++) {
-                            tempExchangeToTicker[newResults[j][1][k]] = newResults[j][0]
-                        }
-                    }
-                    infoFinal[i].push(tempExchangeToTicker)
-                } else {
-                    infoFinal[i].push("")
-                    infoFinal[i].push(false)
-                }
-            } else {
-                infoFinal[i].push("")
-                infoFinal[i].push(false)
-            }
-        }
-        return optionVisualizer(infoFinal)
-    } else if (selected == "VIRTUAL BROKERS") {
-        infoFinal = []
-        for (let i = 0; i < info.length; i++) {
-            if(info[i].length >= 16){
-                infoFinal.push(info[i])
-                console.log(info[i])
-                tempExchangeToTicker = {}
-                if(info[i][6] != "") {
-                    newResults = getTickerFromTicker(info[i][6])
-                    if(newResults.length > 0) {
-                        infoFinal[i].push(newResults[0][2])
-                        for (let j = 0; j < newResults.length; j++) {
-                            for (let k = 0; k < newResults[j][1].length; k++) {
-                                tempExchangeToTicker[newResults[j][1][k]] = newResults[j][0]
-                            }
-                        }
-                        infoFinal[i].push(tempExchangeToTicker)
-                    } else {
-                        infoFinal[i].push("")
-                        infoFinal[i].push(false)
-                    }
-                } else {
-                    infoFinal[i].push("")
-                    infoFinal[i].push(false)
-                }
-            }
 
         }
-        return optionVisualizer(infoFinal)
+
     }
 
-    else {
-        return false
-    }
+    return optionVisualizer(infoFinal, symbolIndex,  originalName, originalSymbol,  newInfo, typeBroker)
 }
