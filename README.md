@@ -12,34 +12,23 @@ It follows the following steps:
 2) It then converts all the data from the csv into an array
 3) Next it checks for errors in the errorCase function. There is an if statement for every type which can have a unique error checking statment
 in each. It can eiter return false or continue based on if the data is valid
-4) Then it runs a filtering function if no errors, every type has a unique filtering function. This also can split some data or change it.
-For example CJ:TO converts to CJ and TSX
-5) Once it is done filtering the data it can then map the data. This function is included in the filter function. It takes an argument of
-an array which is the csv filtered. The other argument should contain JSON format of the amount of columns in the new format in the format
-of {originalIndex, newIndex} of the old and new template
-6) Once it maps out all of the data into the new format, it will then download it as a csv.
+4) Then it runs a filtering function for every specific broker in order to manipulate the data and put it into the correct format 
+5) It then maps everything into the proper format and downloads it the user
+6) For this repository please disregard and options or searching functions. This repository only takes care of mapping the data. 
 
-Setting up a new final format:
-1) You have to go into the logic.js file and changed the header variable to a list of the headers in the final csv format
-2) Everywhere that the mapToProperFormat is being used, change it so that every column is being added in.
-
-
-Setting up a new bank provider for the stock trade csv:
-1) First add an if statement in the initAll function that changes the selected variable to the name of the original provider
-2) Go to the error case and add in an if statement to check whether the selected type is the new provider name
-3) Inside add if and else statement that return false if their is an error or they continue in the case that their are no errors
-4) In case their are no errors run the new provider filtering function which you will now make. This function can manipulate the data in whatever
-format you need it. Finally at the end of the filtering function you must run the mapToProperFormat function to rearange all of the data.
-From their the program will take care of everything else
-
-Setting it up:
-1) Inside of the init.js file change the input to whatever id the file upload is inside of your project.
-2) Also selectTypeInput variable in this init.js to the elemend that is a select input which allows you to choose the type of format the original file is in.  
-2) Add a success handler inside of the eventlistener where the commented areas are
-3) Link all the js files inside of your project through script tags
-4) For this repository please disregard and options or searching functions. This repository only takes care of mapping the data. 
+Adding a new broker
+1) Go into init.js and add the broker to the options variable. 
+2) Go to the initAll function in submit.js and add a new type with the new broker name. Follow the same pattern.
+3) Inside of the errorCase function add an if statment with any custom function that checks if the format of the file is correct. Return false if it the 
+format is not correct and return the coresponding filtering function if it correct.
+4) Create a filtering function that filters and manipulates the data by looking at each row not including the header or any of the other rows.
+5) Add the mapToProperFormat function and specify how you want to map out this file based on indexes. Each index is of the original row and make it correspond to the final index in the proper format
 
 
+
+
+I hope that this makes sense, I suggest taking a look at the repository with the searching functionality https://github.com/Pavel-2004/csv-converter-5
+please feel free to reach out to me with any questions, concerns, or criticism at halkopavel@gmail.com. 
 
 
 LOGS
