@@ -494,8 +494,8 @@ function cibcFilter(data){
         }
     }
 
-    return addOptionsToFinalFormat(finalData, 5, 7, 5, 21, "CIBC")
-    //mapToProperFormat(finalData, {18:0, 0:1, 1:2, 5:3, 19:4, 7:5, 3:6, 4:7, 8:8, 10:9, 14:10})
+    //return addOptionsToFinalFormat(finalData, 5, 7, 5, 21, "CIBC")
+    mapToProperFormat(finalData, {18:0, 0:1, 1:2, 5:3, 19:4, 7:5, 3:6, 4:7, 8:8, 10:9, 14:10})
 }
 
 function nationalBankFilter(data){
