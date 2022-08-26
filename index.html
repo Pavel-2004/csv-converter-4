@@ -10,12 +10,29 @@
     <title>CSV TESTING</title>
 </head>
 <body>
-<div class="row justify-content-center" id="mainContainer">
-    <div class="col-12" id="inputBoxes">
-        <input type="file" id="csv">
-        <select id="type">
+<div class="row justify-content-center" id="mainContainer" style="height: 100vh;">
+    <div class="col-4 my-auto" id="inputBoxes" style="padding-top: 2em; padding-bottom: 2em;">
+        <div class="row justify-content-center">
+            <div class="col-12">
+                <p style="font-size: 2em; color: grey; font-weight: bold;">
+                    Please select and attach the correct information
+                </p>
+            </div>
+        </div>
+        <div class="row justify-content-center">
+            <div class="col-12">
+                <p style="margin: 0; padding: 0;">Choose File:</p>
+                <input type="file" id="csv" class="form-control">
+            </div>
+        </div>
+        <div class="row justify-content-center" style="margin-top: 2vh;">
+            <div class="col-12">
+                <p style="margin: 0; padding: 0;">Provider:</p>
+                <select id="type" class="form-control" style="background-color: #e9ecef;">
 
-        </select>
+                </select>
+            </div>
+        </div>
     </div>
     <div class="col-12 d-none" id="infoContainer" style="margin-top: 30px;">
         <div class="row justify-content-center">
