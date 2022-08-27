@@ -641,6 +641,5 @@ function addOptionsToFinalFormat(info, symbolIndex, originalName, originalSymbol
         }
 
     }
-    console.log(infoFinal)
     return optionVisualizer(infoFinal, symbolIndex,  originalName, originalSymbol,  newInfo, typeBroker)
 }

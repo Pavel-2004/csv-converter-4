@@ -160,6 +160,12 @@ function arrayToCsv(data, type){
             .map(v => `"${v}"`)
             .join(',')
     ).join('\r\n');
+    document.getElementById("exampleModal").removeAttribute("style")
+    document.getElementById("exampleModal").setAttribute('aria-hidden', 'true');
+    document.getElementById("exampleModal").classList.remove('show')
+    document.getElementsByTagName('body')[0].classList.remove('modal-open')
+    document.getElementsByClassName('modal-backdrop')[0].remove()
+    document.getElementById("type").value="questrade"
     return downloadBlob(final, type)
 }
 
@@ -174,9 +180,6 @@ function downloadBlob(content, contentType) {
     today = mm + '/' + dd + '/' + yyyy;
     filename = today + "_traders_edge_"+ input.files[0]["name"]
 
-
-
-
     var blob = new Blob([content], { type: contentType });
     var url = URL.createObjectURL(blob);
 
@@ -184,6 +187,7 @@ function downloadBlob(content, contentType) {
     pom.href = url;
     pom.setAttribute('download', filename);
     pom.click();
+    document.getElementById("csv").value=""
     return true
 }
 
